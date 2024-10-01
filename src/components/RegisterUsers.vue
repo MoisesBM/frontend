@@ -4,6 +4,11 @@
       <form @submit.prevent="register">
         <input v-model="username" type="text" placeholder="Nombre de usuario" required />
         <input v-model="password" type="password" placeholder="Contraseña" required />
+        
+        <input v-model="confirmPassword" type="password" placeholder="Confirmar contraseña"/>
+        <input v-model="email" type="email" placeholder="Correo electrónico"/>
+        
+
         <button type="submit">Registrar</button>
       </form>
   
