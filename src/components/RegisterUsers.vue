@@ -7,10 +7,13 @@
       <input v-model="confirmPassword" type="password" placeholder="Confirmar contraseña" required />
       <input v-model="email" type="email" placeholder="Correo electrónico" required />
 
-      <button type="submit">Registrar</button>
+      <div class="button-container">
+        <button type="submit">Registrar</button>
+        <button type="button" @click="goToLogin">Volver</button>
+      </div>
     </form>
 
-    <!-- Modal para mostrar éxito en el registro -->
+
     <div v-if="showModal" class="modal">
       <div class="modal-content">
         <h3>Registro exitoso</h3>
@@ -36,22 +39,21 @@ export default {
   },
   methods: {
     async register() {
-      // Validar si las contraseñas coinciden
+
       if (this.password !== this.confirmPassword) {
         alert('Las contraseñas no coinciden');
         return;
       }
 
       try {
-        // Hacer la petición al backend para registrar el usuario
+
         const response = await axios.post('http://localhost:3000/register', {
           username: this.username,
           password: this.password,
-          confirmPassword: this.confirmPassword, // Aunque no se guarda, se envía para validar en backend
+          confirmPassword: this.confirmPassword,
           email: this.email,
         });
 
-        // Si el registro fue exitoso, mostrar el modal
         if (response.status === 201) {
           this.showModal = true;
         }
@@ -61,7 +63,6 @@ export default {
       }
     },
     goToLogin() {
-      // Redirigir al login
       this.$router.push('/login');
     },
   },
@@ -71,11 +72,78 @@ export default {
 <style scoped>
 .register {
   display: flex;
-  border-radius: 2rem;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
   max-width: 400px;
-  margin: auto;
+  margin: -110px auto;
+  padding: 30px;
+  background-color: #f4f4f4;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+h2 {
+  font-size: 2rem;
+  color: #1d3557;
+  margin-bottom: 20px;
+  text-align: center;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  letter-spacing: 1px;
+}
+
+form {
+  width: 100%;
+}
+
+input {
+  width: 100%;
+  padding: 10px;
+  margin: 10px 0;
+  border: 1px solid #a8dadc;
+  border-radius: 5px;
+  font-size: 1rem;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  box-sizing: border-box;
+  transition: border-color 0.3s ease;
+}
+
+input:focus {
+  outline: none;
+  border-color: #457b9d;
+}
+
+
+.button-container {
+  display: flex;
+  justify-content: space-between; 
+  margin-top: 20px; 
+}
+
+
+button[type="submit"],
+.button-container button {
+  width: 48%; 
+  padding: 12px;
+  background-color: #457b9d;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  font-size: 1rem;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+button[type="submit"]:hover,
+.button-container button:hover {
+  background-color: #1d3557; 
+  transform: scale(1.02); 
+}
+
+button[type="submit"]:active,
+.button-container button:active {
+  transform: scale(0.98);
 }
 
 .modal {
@@ -84,7 +152,7 @@ export default {
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: rgba(0, 0, 0, 0.6);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -95,5 +163,33 @@ export default {
   padding: 20px;
   border-radius: 10px;
   text-align: center;
+  width: 80%;
+  max-width: 400px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.modal-content h3 {
+  font-size: 1.5rem;
+  margin-bottom: 15px;
+  color: #1d3557;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.modal-content p {
+  font-size: 1rem;
+  color: #457b9d;
+}
+
+@media (max-width: 600px) {
+  .register {
+    padding: 20px;
+    margin: 20px auto;
+  }
+
+  input,
+  button[type="submit"] {
+    font-size: 0.9rem;
+    padding: 8px;
+  }
 }
 </style>

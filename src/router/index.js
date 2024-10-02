@@ -23,7 +23,8 @@ const routes = [
     {
       path: '/home',
       name: 'HomeInicial',
-      component: HomeInicial
+      component: HomeInicial,
+      require: true
     }
   ];
   
@@ -32,5 +33,7 @@ const routes = [
     routes
   });
   
+
+
   export default router;
   
