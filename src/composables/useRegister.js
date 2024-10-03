@@ -12,12 +12,12 @@ export default function useRegister() {
   const errorMessage = ref('');
   const router = useRouter();
 
+  
   const register = async () => {
     if (password.value !== confirmPassword.value) {
       alert('Las contraseñas no coinciden');
       return;
     }
-
     try {
       const response = await axios.post('http://localhost:3000/register', {
         username: username.value,
