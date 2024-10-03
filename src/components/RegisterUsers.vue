@@ -6,13 +6,18 @@
       <input v-model="password" type="password" placeholder="Contraseña" required />
       <input v-model="confirmPassword" type="password" placeholder="Confirmar contraseña" required />
       <input v-model="email" type="email" placeholder="Correo electrónico" required />
+      
+      <div class="checkbox-container">
+        <input v-model="acceptTerms" type="checkbox" id="acceptTerms" />
+        <label for="acceptTerms">Acepto los términos y condiciones</label>
+        <small>Debe aceptar los términos y condiciones para registrarse.</small>
+      </div>
 
       <div class="button-container">
-        <button type="submit">Registrar</button>
+        <button type="submit" :disabled="!acceptTerms">Registrar</button>
         <button type="button" @click="goToLogin">Volver</button>
       </div>
     </form>
-
 
     <div v-if="showModal" class="modal">
       <div class="modal-content">
@@ -24,49 +29,12 @@
   </div>
 </template>
 
-<script>
-import axios from 'axios';
+<script setup>
+import useRegister from '@/composables/useRegister.js';
+import { ref } from 'vue';
 
-export default {
-  data() {
-    return {
-      username: '',
-      password: '',
-      confirmPassword: '',
-      email: '',
-      showModal: false,
-    };
-  },
-  methods: {
-    async register() {
-
-      if (this.password !== this.confirmPassword) {
-        alert('Las contraseñas no coinciden');
-        return;
-      }
-
-      try {
-
-        const response = await axios.post('http://localhost:3000/register', {
-          username: this.username,
-          password: this.password,
-          confirmPassword: this.confirmPassword,
-          email: this.email,
-        });
-
-        if (response.status === 201) {
-          this.showModal = true;
-        }
-      } catch (error) {
-        console.error('Error al registrar:', error.response ? error.response.data : error);
-        alert('Error al registrar el usuario: ' + (error.response ? error.response.data : error.message));
-      }
-    },
-    goToLogin() {
-      this.$router.push('/login');
-    },
-  },
-};
+const { username, password, confirmPassword, email, showModal, register, goToLogin } = useRegister();
+const acceptTerms = ref(false);
 </script>
 
 <style scoped>
@@ -113,13 +81,28 @@ input:focus {
   border-color: #457b9d;
 }
 
+.checkbox-container {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin: 10px 0;
+}
+
+.checkbox-container input {
+  margin-right: 10px;
+}
+
+.checkbox-container small {
+  margin-top: 5px;
+  color: #6c757d;
+  font-size: 0.875rem;
+}
 
 .button-container {
   display: flex;
   justify-content: space-between; 
   margin-top: 20px; 
 }
-
 
 button[type="submit"],
 .button-container button {
@@ -144,6 +127,11 @@ button[type="submit"]:hover,
 button[type="submit"]:active,
 .button-container button:active {
   transform: scale(0.98);
+}
+
+button[type="submit"]:disabled {
+  background-color: #a8dadc;
+  cursor: not-allowed;
 }
 
 .modal {

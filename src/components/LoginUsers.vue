@@ -26,69 +26,11 @@
   </div>
 </template>
 
-<script>
-export default {
-  data() {
-    return {
-      username: '',
-      password: '',
-      token: '',
-      errorMessage: '',
-      tokenSent: false,
-    };
-  },
-  methods: {
-    async login() {
-      try {
-        const response = await fetch('http://localhost:3000/login', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            username: this.username,
-            password: this.password,
-          }),
-        });
+<script setup>
 
-        if (response.ok) {
+import useAuth from '@/composables/useAuth.js';
 
-          this.tokenSent = true;
-          this.errorMessage = '';
-        } else {
-          this.errorMessage = 'Credenciales incorrectas';
-        }
-      } catch (error) {
-        this.errorMessage = 'Error en la conexión';
-      }
-    },
-
-    async verifyToken() {
-      try {
-        const response = await fetch('http://localhost:3000/verify-token', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            username: this.username,
-            token: this.token,
-          }),
-        });
-
-        if (response.ok) {
-          const data = await response.json();
-          localStorage.setItem('token', data.token);
-          this.$router.push('/home');
-        } else {
-          this.errorMessage = 'Token inválido';
-        }
-      } catch (error) {
-        this.errorMessage = 'Error al validar el token';
-      }
-    },
-  },
-};
+const { username, password, token, errorMessage, tokenSent, login, verifyToken } = useAuth();
 </script>
 
 <style scoped>
@@ -114,7 +56,6 @@ h2 {
   letter-spacing: 1px;
 }
 
-
 form {
   width: 100%;
 }
@@ -135,7 +76,6 @@ input:focus {
   outline: none;
   border-color: #457b9d;
 }
-
 
 button[type="submit"] {
   width: 100%;
@@ -185,7 +125,7 @@ button[type="submit"]:active {
   background-color: #1d3557;
 }
 
-/* Estilos para el mensaje de error */
+
 .error {
   color: red;
   font-weight: bold;
@@ -193,7 +133,7 @@ button[type="submit"]:active {
   text-align: center;
 }
 
-/* Link de registro */
+
 .register-link {
   margin-top: 20px;
   text-align: center;
@@ -205,12 +145,10 @@ button[type="submit"]:active {
   color: #1d3557;
   text-decoration: underline;
 }
-
 .register-link a:hover {
   color: #457b9d;
 }
 
-/* Responsividad */
 @media (max-width: 600px) {
   .login-container {
     padding: 20px;

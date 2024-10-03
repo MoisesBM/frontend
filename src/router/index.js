@@ -5,6 +5,7 @@ import RegisterView from '@/views/RegisterView.vue';
 import HomeInicial from '@/components/HomeInicial.vue';
 
 
+
 const routes = [
     {
       path: '/',
@@ -24,7 +25,7 @@ const routes = [
       path: '/home',
       name: 'HomeInicial',
       component: HomeInicial,
-      require: true
+      meta: { requiresAuth: true }
     }
   ];
   
@@ -32,8 +33,6 @@ const routes = [
     history: createWebHistory(),
     routes
   });
-  
-
 
   export default router;
   
