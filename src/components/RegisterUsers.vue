@@ -33,8 +33,11 @@
 import useRegister from '@/composables/useRegister.js';
 import { ref } from 'vue';
 
-const { username, password, confirmPassword, email, showModal, register, goToLogin } = useRegister();
+const { username, password, confirmPassword, email, showModal, register, goToLogin} = useRegister();
 const acceptTerms = ref(false);
+
+console.log('Valor de acceptTerms:', acceptTerms.value);
+
 </script>
 
 <style scoped>
