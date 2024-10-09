@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <!-- Imagen ubicada en la esquina superior izquierda -->
-    <img alt="logo" src="./assets/favicon.jpg" class="logo" />
+    <img alt="logo" src="./assets/logo.jpg" class="logo"/>
     
     <!-- Contenedor de la aplicación -->
     <router-view />
@@ -13,6 +13,7 @@
   width: 100px;
   height: 100px;
   position: fixed;
+  margin: 0;
   
 }
 </style>
