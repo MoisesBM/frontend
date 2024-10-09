@@ -12,9 +12,7 @@ export default function useRegister() {
   const showModal = ref(false);
   const errorMessage = ref('');
   const router = useRouter();
-  
 
-  
   const register = async () => {
     if (password.value !== confirmPassword.value) {
       alert('Las contraseñas no coinciden');

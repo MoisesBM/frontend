@@ -40,7 +40,7 @@ const { username, password, token, errorMessage, tokenSent, login, verifyToken }
   align-items: center;
   justify-content: center;
   max-width: 400px;
-  margin: -110px auto;
+  margin: 100px auto;
   padding: 30px;
   background-color: #f4f4f4;
   border-radius: 10px;
