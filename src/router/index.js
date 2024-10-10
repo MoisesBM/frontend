@@ -2,7 +2,7 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import LoginView from '@/views/LoginView.vue';
 import RegisterView from '@/views/RegisterView.vue';
-import HomeInicial from '@/components/HomeInicial.vue';
+import HomeView from '@/views/HomeView.vue';
 
 
 
@@ -24,7 +24,7 @@ const routes = [
     {
       path: '/home',
       name: 'HomeInicial',
-      component: HomeInicial,
+      component: HomeView,
       meta: { requiresAuth: true }
     }
   ];

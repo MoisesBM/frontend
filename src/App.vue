@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <!-- Imagen ubicada en la esquina superior izquierda -->
-    <img alt="logo" src="./assets/logo.jpg" class="logo"/>
+    <img alt="logo" src="./assets/logo.png" class="logo"/>
     
     <!-- Contenedor de la aplicación -->
     <router-view />

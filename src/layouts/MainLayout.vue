@@ -1,5 +1,15 @@
 <template>
   <div>
+    <header>
+      <div class="main-layout">
+        <nav class="navbar">
+          <a class="nav-button" href="/">Inicio</a>
+          <a class="nav-button" href="/projects">Mis Proyectos</a>
+          <a class="nav-button" href="/support">Soporte</a>
+        </nav>
+      </div>
+    </header>
+
     <!-- Panel de Bienvenida y Resumen -->
     <div class="welcome-panel">
       <h1>¡Bienvenido, {{ username }}!</h1>
@@ -48,99 +58,48 @@
   </div>
 </template>
 
+
 <script>
 export default {
-  name: 'HomeInicial',
-  data() {
-    return {
-      username: 'Daniela',  // Esto puede venir dinámicamente de una API
-      activeProjects: 5,  // Ejemplo, puede ser cargado desde una API
-      pendingTasks: 12,  // Ejemplo estático
-      projectProgress: 45,  // Progreso en porcentaje
-      totalTimeWorked: 10,  // Tiempo total trabajado en horas
-      projects: [
-        { id: 1, name: 'Proyecto A', tasks: [{ id: 1 }, { id: 2 }] },
-        { id: 2, name: 'Proyecto B', tasks: [{ id: 3 }] }
-      ],  // Lista de proyectos
-      assignedTasks: [
-        { id: 1, name: 'Tarea 1', dueDate: '10/10/2024' },
-        { id: 2, name: 'Tarea 2', dueDate: '12/10/2024' }
-      ],  // Lista de tareas asignadas
-    };
-  },
-  methods: {
-    completeTask(taskId) {
-      // Lógica para marcar una tarea como completada
-      this.assignedTasks = this.assignedTasks.filter(task => task.id !== taskId);
-      this.pendingTasks -= 1;
-    },
-    startTimer() {
-      // Lógica para iniciar el temporizador
-      console.log('Temporizador iniciado');
-    },
-    stopTimer() {
-      // Lógica para detener el temporizador
-      console.log('Temporizador detenido');
-    }
-  }
+  name: 'MainLayout'
 }
 </script>
+
 <style scoped>
-.welcome-panel {
-  margin-top: 20px;
-  text-align: center;
+.main-layout {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start; /* Para alinear en la parte superior */
+  padding-top: 20px; /* Espacio desde la parte superior */
+  background-color: #f4f4f9;
+  height: 100vh;
 }
 
-.progress-summary {
-  margin-top: 20px;
-}
-
-.progress-bar {
-  width: 100%;
-  background-color: #ddd;
-  border-radius: 5px;
-}
-
-.progress {
-  height: 20px;
-  background-color: #007bff;
-  border-radius: 5px;
-}
-
-.projects-overview, .tasks-overview, .time-tracking-overview {
-  margin-top: 30px;
-  width: 100%;
-}
-
-.projects-list {
+.navbar {
   display: flex;
   gap: 20px;
-}
-
-.project-card {
   padding: 20px;
-  background-color: white;
-  border-radius: 8px;
+  background-color: #fff;
+  border-radius: 12px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-  width: 250px;
 }
 
-.task-list {
-  list-style: none;
-  padding: 0;
-}
-
-.complete-task-button {
-  background-color: green;
+.nav-button {
+  padding: 12px 24px;
+  font-size: 16px;
+  text-decoration: none;
+  border-radius: 8px;
+  background-color: #007bff;
   color: white;
-  border: none;
-  padding: 5px 10px;
-  border-radius: 5px;
+  transition: background-color 0.3s ease;
   cursor: pointer;
 }
 
-.time-chart {
-  text-align: center;
+.nav-button:hover {
+  background-color: #0056b3;
 }
 
+.nav-button:active {
+  background-color: #004085;
+}
 </style>
