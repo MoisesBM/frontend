@@ -1,146 +1,240 @@
 <template>
-  <div>
-    <!-- Panel de Bienvenida y Resumen -->
-    <div class="welcome-panel">
-      <h1>¡Bienvenido, {{ username }}!</h1>
-      <p>Tienes {{ activeProjects }} proyectos activos y {{ pendingTasks }} tareas pendientes.</p>
-      <div class="progress-summary">
-        <h2>Resumen de Progreso</h2>
-        <div class="progress-bar">
-          <div class="progress" :style="{ width: projectProgress + '%' }"></div>
-        </div>
-        <p>{{ projectProgress }}% completado en proyectos activos.</p>
+  <div class="container">
+    <h1>INICIO</h1>
+
+    <div class="row">
+      <!-- Projects Section -->
+      <div class="col-md-6">
+        <h2>Proyectos</h2>
+        <table class="table table-bordered">
+          <thead>
+            <tr>
+              <th>Nombre del Proyecto</th>
+              <th>Descripción</th>
+              <th>Fecha</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="(proyecto, index) in proyectos" :key="index">
+              <td>{{ proyecto.nombre }}</td>
+              <td>{{ proyecto.descripcion }}</td>
+              <td>{{ proyecto.fecha }}</td>
+              <td>
+                <button @click="editarProyecto(proyecto.id)">Editar Proyecto</button>
+                <button @click="gestionarProyecto(proyecto.id)">Gestionar Proyecto</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <button class="btn btn-primary" @click="abrirFormulario">Añadir Proyecto</button>
       </div>
-    </div>
-    
-    <!-- Vista de Proyectos en Progreso -->
-    <div class="projects-overview">
-      <h2>Proyectos en Progreso</h2>
-      <div class="projects-list">
-        <div v-for="project in projects" :key="project.id" class="project-card">
-          <h3>{{ project.name }}</h3>
-          <p>{{ project.tasks.length }} tareas pendientes</p>
-          <a href="#" class="view-project-button">Ver Proyecto</a>
-        </div>
+
+      <div class="col-md-6">
+        <h2>Tareas</h2>
+        <table class="table table-bordered">
+          <thead>
+            <tr>
+              <th>Nombre de la Tarea</th>
+              <th>Estado</th>
+              <th>Fecha</th>
+              <th>Proyecto</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="(tarea, index) in tareas" :key="index">
+              <td>{{ tarea.nombre }}</td>
+              <td>{{ tarea.estado }}</td>
+              <td>{{ tarea.fecha }}</td>
+            </tr>
+          </tbody>
+        </table>
       </div>
     </div>
 
-    <!-- Tareas Asignadas -->
-    <div class="tasks-overview">
-      <h2>Tareas Asignadas</h2>
-      <ul class="task-list">
-        <li v-for="task in assignedTasks" :key="task.id">
-          {{ task.name }} - <span class="due-date">{{ task.dueDate }}</span>
-          <button @click="completeTask(task.id)" class="complete-task-button">Completar</button>
-        </li>
-      </ul>
-    </div>
-
-    <!-- Seguimiento del Tiempo -->
-    <div class="time-tracking-overview">
-      <h2>Seguimiento del Tiempo</h2>
-      <div class="time-chart">
-        <p>Tiempo trabajado esta semana: {{ totalTimeWorked }} horas</p>
-        <button @click="startTimer">Iniciar Temporizador</button>
-        <button @click="stopTimer">Detener Temporizador</button>
+    <div v-if="mostrarFormulario" class="modal">
+  <div class="form-container">
+    <h3>Añadir Proyecto</h3>
+    <form @submit.prevent="guardarProyecto">
+      <div class="form-group">
+        <label for="nombre">Nombre del Proyecto:</label>
+        <input type="text" v-model="nuevoProyecto.nombre" required />
       </div>
-    </div>
+      <div class="form-group">
+        <label for="descripcion">Descripción:</label>
+        <input type="text" v-model="nuevoProyecto.descripcion" required />
+      </div>
+      <div class="form-group">
+        <label for="fecha">Fecha:</label>
+        <input type="date" v-model="nuevoProyecto.fecha" required />
+      </div>
+      <div class="form-actions">
+        <button type="submit" class="btn-save">Guardar</button>
+        <button type="button" class="btn-cancel" @click="cerrarFormulario">Cancelar</button>
+      </div>
+    </form>
+  </div>
+</div>
   </div>
 </template>
 
 <script>
+import { ref } from 'vue';
+import axios from 'axios';
+
 export default {
   name: 'HomeInicial',
-  data() {
+  setup() {
+    const proyectos = ref([]);
+    const tareas = ref([]);
+    const mostrarFormulario = ref(false);
+    const nuevoProyecto = ref({
+      nombre: '',
+      descripcion: '',
+      fecha: '',
+    });
+
+    const abrirFormulario = () => {
+      mostrarFormulario.value = true;
+    };
+
+    const cerrarFormulario = () => {
+      mostrarFormulario.value = false;
+      nuevoProyecto.value = { nombre: '', descripcion: '', fecha: '' };
+    };
+
+    const guardarProyecto = async () => {
+      try {
+
+        const userId = localStorage.getItem('id'); 
+        console.log(localStorage.getItem('id'));
+        const response = await axios.post('http://localhost:3000/api/proyectos', { ...nuevoProyecto.value, userId,
+});
+        proyectos.value.push(response.data); 
+        cerrarFormulario(); 
+      } catch (error) {
+        console.error('Error al guardar proyecto:', error);
+      }
+    };
+
+    const editarProyecto = (id) => {
+      console.log(`Editar proyecto con ID: ${id}`);
+    };
+
+    const gestionarProyecto = (id) => {
+      console.log(`Gestionar proyecto con ID: ${id}`);
+    };
+
     return {
-      username: 'Daniela',  // Esto puede venir dinámicamente de una API
-      activeProjects: 5,  // Ejemplo, puede ser cargado desde una API
-      pendingTasks: 12,  // Ejemplo estático
-      projectProgress: 45,  // Progreso en porcentaje
-      totalTimeWorked: 10,  // Tiempo total trabajado en horas
-      projects: [
-        { id: 1, name: 'Proyecto A', tasks: [{ id: 1 }, { id: 2 }] },
-        { id: 2, name: 'Proyecto B', tasks: [{ id: 3 }] }
-      ],  // Lista de proyectos
-      assignedTasks: [
-        { id: 1, name: 'Tarea 1', dueDate: '10/10/2024' },
-        { id: 2, name: 'Tarea 2', dueDate: '12/10/2024' }
-      ],  // Lista de tareas asignadas
+      proyectos,
+      tareas,
+      mostrarFormulario,
+      nuevoProyecto,
+      abrirFormulario,
+      cerrarFormulario,
+      guardarProyecto,
+      editarProyecto,
+      gestionarProyecto,
     };
   },
-  methods: {
-    completeTask(taskId) {
-      // Lógica para marcar una tarea como completada
-      this.assignedTasks = this.assignedTasks.filter(task => task.id !== taskId);
-      this.pendingTasks -= 1;
-    },
-    startTimer() {
-      // Lógica para iniciar el temporizador
-      console.log('Temporizador iniciado');
-    },
-    stopTimer() {
-      // Lógica para detener el temporizador
-      console.log('Temporizador detenido');
-    }
-  }
-}
+};
 </script>
+
 <style scoped>
-.welcome-panel {
-  margin-top: 20px;
-  text-align: center;
-}
-
-.progress-summary {
-  margin-top: 20px;
-}
-
-.progress-bar {
-  width: 100%;
-  background-color: #ddd;
-  border-radius: 5px;
-}
-
-.progress {
-  height: 20px;
-  background-color: #007bff;
-  border-radius: 5px;
-}
-
-.projects-overview, .tasks-overview, .time-tracking-overview {
-  margin-top: 30px;
-  width: 100%;
-}
-
-.projects-list {
+.modal {
+  background-color: rgba(0, 0, 0, 0.5);
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
   display: flex;
-  gap: 20px;
+  align-items: center;
+  justify-content: center;
 }
 
-.project-card {
-  padding: 20px;
+form {
   background-color: white;
-  border-radius: 8px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-  width: 250px;
+  padding: 20px;
+  border-radius: 5px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
-.task-list {
-  list-style: none;
-  padding: 0;
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
-.complete-task-button {
-  background-color: green;
+.form-container {
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 10px;
+  width: 400px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+h3 {
+  text-align: center;
+  color: #333;
+}
+
+.form-group {
+  margin-bottom: 15px;
+}
+
+label {
+  display: block;
+  margin-bottom: 5px;
+  color: #555;
+}
+
+input[type="text"],
+input[type="date"] {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  box-sizing: border-box;
+  transition: border-color 0.3s ease;
+}
+
+input[type="text"]:focus,
+input[type="date"]:focus {
+  border-color: #007bff;
+  outline: none;
+}
+
+.form-actions {
+  display: flex;
+  justify-content: space-between;
+}
+
+.btn-save {
+  background-color: #28a745;
   color: white;
+  padding: 10px 20px;
   border: none;
-  padding: 5px 10px;
   border-radius: 5px;
   cursor: pointer;
 }
 
-.time-chart {
-  text-align: center;
+.btn-cancel {
+  background-color: #dc3545;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
 }
 
+button:hover {
+  opacity: 0.9;
+}
 </style>

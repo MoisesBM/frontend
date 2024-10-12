@@ -6,6 +6,9 @@ export default function useAuth() {
   const username = ref('');
   const password = ref('');
   const token = ref('');
+  //prueba
+  //userId = ref('');
+  //------
   const errorMessage = ref('');
   const tokenSent = ref(false);
   const router = useRouter();
@@ -24,8 +27,14 @@ export default function useAuth() {
       });
 
       if (response.ok) {
+
         tokenSent.value = true;
         errorMessage.value = '';
+
+        console.error(response.userId);
+        console.log(response.userId);
+        console.log(response.localStorage);
+
       } else {
         errorMessage.value = 'Credenciales incorrectas';
       }
@@ -44,12 +53,18 @@ export default function useAuth() {
         body: JSON.stringify({
           username: username.value,
           token: token.value,
+          //prueba
+          //userId: userId.value,
         }),
       });
 
       if (response.ok) {
         const data = await response.json();
+        console.log(data); //verificar los datos que esta almacenando - MOISESBM
+          //prueba
         localStorage.setItem('token', data.token);
+        localStorage.setItem('userId', response.userId);
+
         router.push('/home');
       } else {
         errorMessage.value = 'Token inválido';
@@ -63,6 +78,8 @@ export default function useAuth() {
     username,
     password,
     token,
+    //prueba
+    //userId,
     errorMessage,
     tokenSent,
     login,

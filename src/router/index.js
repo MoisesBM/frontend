@@ -25,7 +25,7 @@ const routes = [
       path: '/home',
       name: 'HomeInicial',
       component: HomeView,
-      meta: { requiresAuth: true }
+      //meta: { requiresAuth: true }
     }
   ];
   

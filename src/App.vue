@@ -1,9 +1,6 @@
 <template>
   <div id="app">
-    <!-- Imagen ubicada en la esquina superior izquierda -->
-    <img alt="logo" src="./assets/logo.png" class="logo"/>
-    
-    <!-- Contenedor de la aplicación -->
+   <!--<img alt="logo" src="./assets/logo.png" class="logo"/>-->
     <router-view />
   </div>
 </template>
@@ -14,6 +11,5 @@
   height: 100px;
   position: fixed;
   margin: 0;
-  
 }
 </style>

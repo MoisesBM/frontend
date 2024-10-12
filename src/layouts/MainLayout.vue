@@ -1,105 +1,166 @@
 <template>
-  <div>
-    <header>
-      <div class="main-layout">
-        <nav class="navbar">
-          <a class="nav-button" href="/">Inicio</a>
-          <a class="nav-button" href="/projects">Mis Proyectos</a>
-          <a class="nav-button" href="/support">Soporte</a>
-        </nav>
-      </div>
-    </header>
-
-    <!-- Panel de Bienvenida y Resumen -->
-    <div class="welcome-panel">
-      <h1>¡Bienvenido, {{ username }}!</h1>
-      <p>Tienes {{ activeProjects }} proyectos activos y {{ pendingTasks }} tareas pendientes.</p>
-      <div class="progress-summary">
-        <h2>Resumen de Progreso</h2>
-        <div class="progress-bar">
-          <div class="progress" :style="{ width: projectProgress + '%' }"></div>
+  <div class="d-flex">
+    <!-- Sidebar -->
+    <nav
+      id="sidebar"
+      class="bg-primary vh-100 d-flex flex-column justify-content-between"
+      @mouseover="showNames"
+      @mouseleave="hideNames"
+    >
+      <div>
+        <!-- Logo -->
+        <div class="d-flex align-items-center justify-content-center py-4">
+          <i class="bi bi-app-indicator text-white fs-2"></i>
         </div>
-        <p>{{ projectProgress }}% completado en proyectos activos.</p>
+
+        <!-- Menú -->
+        <ul class="nav flex-column mt-4">
+          <li class="nav-item" v-for="item in menuItems" :key="item.name">
+            <a
+              class="nav-link d-flex align-items-center justify-content-start text-white"
+              href="#"
+            >
+              <span class="icon pe-3">
+                <i :class="item.icon"></i>
+              </span>
+              <span class="label transition-text" :class="{'collapsed': !isSidebarExpanded}">
+                {{ item.name }}
+              </span>
+            </a>
+          </li>
+        </ul>
       </div>
-    </div>
-    
-    <!-- Vista de Proyectos en Progreso -->
-    <div class="projects-overview">
-      <h2>Proyectos en Progreso</h2>
-      <div class="projects-list">
-        <div v-for="project in projects" :key="project.id" class="project-card">
-          <h3>{{ project.name }}</h3>
-          <p>{{ project.tasks.length }} tareas pendientes</p>
-          <a href="#" class="view-project-button">Ver Proyecto</a>
+
+      <!-- Botón de Salir -->
+      <div class="text-center mb-4">
+        <button class="btn btn-danger w-100 d-flex align-items-center justify-content-center" @click="logout">
+          <i class="bi bi-box-arrow-right"></i>
+          <span class="ms-2 transition-text" :class="{'collapsed': !isSidebarExpanded}">
+            Salir
+          </span>
+        </button>
+      </div>
+    </nav>
+
+    <!-- Barra -->
+    <div class="w-100">
+      <div class="topbar d-flex align-items-center justify-content-between p-3">
+        <div>
+          <h2 class="text-success">GstWeb</h2>
+        </div>
+        <div class="d-flex align-items-center">
+          <div class="search-bar me-3">
+            <input type="text" class="form-control" placeholder="Search" />
+          </div>
+          <div class="user-profile d-flex align-items-center">
+            <img
+              src="https://via.placeholder.com/40"
+              alt="User profile"
+              class="rounded-circle"
+            />
+            <span class="ms-2">Moises Buitrago</span>
+          </div>
         </div>
       </div>
-    </div>
 
-    <!-- Tareas Asignadas -->
-    <div class="tasks-overview">
-      <h2>Tareas Asignadas</h2>
-      <ul class="task-list">
-        <li v-for="task in assignedTasks" :key="task.id">
-          {{ task.name }} - <span class="due-date">{{ task.dueDate }}</span>
-          <button @click="completeTask(task.id)" class="complete-task-button">Completar</button>
-        </li>
-      </ul>
-    </div>
-
-    <!-- Seguimiento del Tiempo -->
-    <div class="time-tracking-overview">
-      <h2>Seguimiento del Tiempo</h2>
-      <div class="time-chart">
-        <p>Tiempo trabajado esta semana: {{ totalTimeWorked }} horas</p>
-        <button @click="startTimer">Iniciar Temporizador</button>
-        <button @click="stopTimer">Detener Temporizador</button>
+      <!-- Contenido principal -->
+      <div id="content">
+        <slot />
       </div>
     </div>
   </div>
 </template>
 
+<script setup>
+import { ref } from 'vue';
+import { useRouter } from 'vue-router';
 
-<script>
-export default {
-  name: 'MainLayout'
-}
+const isSidebarExpanded = ref(false);
+const router = useRouter();
+
+const menuItems = ref([
+  { name: 'Inicio', icon: 'bi bi-grid' },
+  { name: 'Proyectos', icon: 'bi bi-app' },
+  { name: 'Tareas', icon: 'bi bi-map' },
+  { name: 'Perfil', icon: 'bi bi-person' },
+  { name: ' ...', icon: 'bi bi-table' },
+  { name: '...', icon: 'bi bi-box-arrow-in-right' },
+  { name: '...', icon: 'bi bi-person-plus' },
+]);
+
+const showNames = () => {
+  isSidebarExpanded.value = true;
+};
+
+const hideNames = () => {
+  isSidebarExpanded.value = false;
+};
+
+const logout = () => {
+  console.log('Sesión cerrada');
+  router.push('/login');
+};
 </script>
 
 <style scoped>
-.main-layout {
+/* Sidebar */
+#sidebar {
+  width: 60px;
+  transition: width 0.4s ease;
+}
+
+#sidebar:hover {
+  width: 200px;
+}
+
+.icon {
+  font-size: 24px;
+  min-width: 24px;
+  text-align: center;
+}
+
+.nav-link {
+  padding: 10px 20px;
   display: flex;
-  justify-content: center;
-  align-items: flex-start; /* Para alinear en la parte superior */
-  padding-top: 20px; /* Espacio desde la parte superior */
-  background-color: #f4f4f9;
-  height: 100vh;
+  align-items: center;
 }
 
-.navbar {
+.transition-text {
+  opacity: 1;
+  visibility: visible;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.transition-text.collapsed {
+  opacity: 0;
+  visibility: hidden;
+}
+
+/* Topbar */
+.topbar {
+  background-color: #f8f9fa;
+  border-bottom: 1px solid #ddd;
+}
+
+.search-bar input {
+  border-radius: 20px;
+  border: 1px solid #ddd;
+  padding: 5px 15px;
+}
+
+.user-profile img {
+  width: 40px;
+  height: 40px;
+}
+
+#content {
+  background-color: #f8f9fa;
+}
+
+.button-container {
   display: flex;
-  gap: 20px;
-  padding: 20px;
-  background-color: #fff;
-  border-radius: 12px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-}
-
-.nav-button {
-  padding: 12px 24px;
-  font-size: 16px;
-  text-decoration: none;
-  border-radius: 8px;
-  background-color: #007bff;
-  color: white;
-  transition: background-color 0.3s ease;
-  cursor: pointer;
-}
-
-.nav-button:hover {
-  background-color: #0056b3;
-}
-
-.nav-button:active {
-  background-color: #004085;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 10px;
 }
 </style>

@@ -30,7 +30,7 @@
 
 import useAuth from '@/composables/useAuth.js';
 
-const { username, password, token, errorMessage, tokenSent, login, verifyToken } = useAuth();
+const { username, password, token,/**userId**/ errorMessage, tokenSent, login, verifyToken } = useAuth();
 </script>
 
 <style scoped>
