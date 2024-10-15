@@ -78,67 +78,52 @@
   </div>
 </template>
 
-<script>
-import { ref } from 'vue';
-import axios from 'axios';
+<script setup>
+import { ref, onMounted } from 'vue';
+import axios from 'axios'; // Importa axios
 
-export default {
-  name: 'HomeInicial',
-  setup() {
-    const proyectos = ref([]);
-    const tareas = ref([]);
-    const mostrarFormulario = ref(false);
-    const nuevoProyecto = ref({
-      nombre: '',
-      descripcion: '',
-      fecha: '',
-    });
-
-    const abrirFormulario = () => {
-      mostrarFormulario.value = true;
-    };
-
-    const cerrarFormulario = () => {
-      mostrarFormulario.value = false;
-      nuevoProyecto.value = { nombre: '', descripcion: '', fecha: '' };
-    };
-
-    const guardarProyecto = async () => {
-      try {
-
-        const userId = localStorage.getItem('id'); 
-        console.log(localStorage.getItem('id'));
-        const response = await axios.post('http://localhost:3000/api/proyectos', { ...nuevoProyecto.value, userId,
+const proyectos = ref([]);
+const nuevoProyecto = ref({
+  nombre: '',
+  descripcion: '',
+  fecha: ''
 });
-        proyectos.value.push(response.data); 
-        cerrarFormulario(); 
-      } catch (error) {
-        console.error('Error al guardar proyecto:', error);
-      }
-    };
 
-    const editarProyecto = (id) => {
-      console.log(`Editar proyecto con ID: ${id}`);
-    };
+// // Función para cargar los proyectos del usuario
+// const cargarProyectos = async () => {
+//   try {
+//     const username = localStorage.getItem('username'); // Obtenemos el username desde localStorage
+//     const response = await axios.get(`http://localhost:3000/api/proyectos/${username}`);
+//     proyectos.value = response.data; // Actualizamos la lista de proyectos
+//   } catch (error) {
+//     console.error('Error al cargar proyectos:', error);
+//   }
+// };
 
-    const gestionarProyecto = (id) => {
-      console.log(`Gestionar proyecto con ID: ${id}`);
-    };
+// // Llamamos a la función al montar el componente
+// onMounted(() => {
+//   cargarProyectos();
+// });
 
-    return {
-      proyectos,
-      tareas,
-      mostrarFormulario,
-      nuevoProyecto,
-      abrirFormulario,
-      cerrarFormulario,
-      guardarProyecto,
-      editarProyecto,
-      gestionarProyecto,
-    };
-  },
+// Función para guardar un proyecto nuevo
+const guardarProyecto = async () => {
+  try {
+    const username = localStorage.getItem('username'); // Obtenemos el username desde localStorage
+    const response = await axios.post('http://localhost:3000/api/proyectos', { ...nuevoProyecto.value, username });
+    proyectos.value.push(response.data); // Actualizamos la lista de proyectos
+    cerrarFormulario(); // Cerramos el formulario
+  } catch (error) {
+    console.error('Error al guardar proyecto:', error);
+  }
 };
+
+// Otras funciones de gestión del formulario
+const mostrarFormulario = ref(false);
+const abrirFormulario = () => { mostrarFormulario.value = true; };
+const cerrarFormulario = () => { mostrarFormulario.value = false; };
+
 </script>
+
 
 <style scoped>
 .modal {
