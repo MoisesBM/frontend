@@ -63,7 +63,6 @@ export default function useAuth() {
         console.log(data); //verificar los datos que esta almacenando - MOISESBM
           //prueba
         localStorage.setItem('token', data.token);
-        localStorage.setItem('userId', response.userId);
 
         router.push('/home');
       } else {

@@ -69,7 +69,7 @@
         <input type="date" v-model="nuevoProyecto.fecha" required />
       </div>
       <div class="form-actions">
-        <button type="submit" class="btn-save">Guardar</button>
+        <button type="submit" class="btn-save" @click="cargarProyectos">Guardar</button>
         <button type="button" class="btn-cancel" @click="cerrarFormulario">Cancelar</button>
       </div>
     </form>
@@ -79,7 +79,7 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
 import axios from 'axios'; // Importa axios
 
 const proyectos = ref([]);
@@ -89,27 +89,38 @@ const nuevoProyecto = ref({
   fecha: ''
 });
 
-// // Función para cargar los proyectos del usuario
-// const cargarProyectos = async () => {
-//   try {
-//     const username = localStorage.getItem('username'); // Obtenemos el username desde localStorage
-//     const response = await axios.get(`http://localhost:3000/api/proyectos/${username}`);
-//     proyectos.value = response.data; // Actualizamos la lista de proyectos
-//   } catch (error) {
-//     console.error('Error al cargar proyectos:', error);
-//   }
-// };
+// Función para cargar los proyectos del usuario autenticado
+const cargarProyectos = async () => {
+  try {
+    const token = localStorage.getItem('token'); // Obtenemos el token desde localStorage
+    const response = await axios.get('http://localhost:3000/api/proyectos', {
+      headers: {
+        Authorization: token
+      }
+    });
+    proyectos.value = response.data; // Actualizamos la lista de proyectos
+  } catch (error) {
+    console.error('Error al cargar proyectos:', error);
+  }
+};
 
-// // Llamamos a la función al montar el componente
-// onMounted(() => {
-//   cargarProyectos();
-// });
+// Llamamos a la función al montar el componente
+onMounted(() => {
+  cargarProyectos();
+});
 
 // Función para guardar un proyecto nuevo
 const guardarProyecto = async () => {
   try {
-    const username = localStorage.getItem('username'); // Obtenemos el username desde localStorage
-    const response = await axios.post('http://localhost:3000/api/proyectos', { ...nuevoProyecto.value, username });
+    const token = localStorage.getItem('token'); // Obtenemos el token desde localStorage
+    const response = await axios.post('http://localhost:3000/api/proyectos', 
+      { ...nuevoProyecto.value }, 
+      {
+        headers: {
+          Authorization: token
+        }
+      }
+    );
     proyectos.value.push(response.data); // Actualizamos la lista de proyectos
     cerrarFormulario(); // Cerramos el formulario
   } catch (error) {
@@ -120,7 +131,7 @@ const guardarProyecto = async () => {
 // Otras funciones de gestión del formulario
 const mostrarFormulario = ref(false);
 const abrirFormulario = () => { mostrarFormulario.value = true; };
-const cerrarFormulario = () => { mostrarFormulario.value = false; };
+const cerrarFormulario = () => { mostrarFormulario.value = false;};
 
 </script>
 
