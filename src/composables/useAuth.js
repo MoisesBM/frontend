@@ -30,8 +30,11 @@ export default function useAuth() {
 
         tokenSent.value = true;
         errorMessage.value = '';
-        
-        localStorage.setItem('username', username.value);
+
+        console.error(response.userId);
+        console.log(response.userId);
+        console.log(response.localStorage);
+
       } else {
         errorMessage.value = 'Credenciales incorrectas';
       }
@@ -57,11 +60,10 @@ export default function useAuth() {
 
       if (response.ok) {
         const data = await response.json();
-        //console.log("datos: ", data); //verificar los datos que esta almacenando - MOISESBM
-
+        console.log(data); //verificar los datos que esta almacenando - MOISESBM
+          //prueba
         localStorage.setItem('token', data.token);
-        //localStorage.setItem('username', data.username);
-        //localStorage.setItem('username', data.username);
+        localStorage.setItem('userId', response.userId);
 
         router.push('/home');
       } else {
