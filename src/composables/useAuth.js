@@ -49,6 +49,7 @@ export default function useAuth() {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token.value}`,
         },
         body: JSON.stringify({
           username: username.value,
@@ -60,10 +61,14 @@ export default function useAuth() {
 
       if (response.ok) {
         const data = await response.json();
-        console.log(data); //verificar los datos que esta almacenando - MOISESBM
-          //prueba
-        localStorage.setItem('token', data.token);
+        // console.log(data); 
+        token.value = data.token;
 
+        localStorage.setItem('token', data.token);
+        localStorage.setItem('userId', data.userId);
+
+        tokenSent.value = data.token;
+        console.log(data.userId);
         router.push('/home');
       } else {
         errorMessage.value = 'Token inválido';

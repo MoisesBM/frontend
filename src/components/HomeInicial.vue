@@ -29,27 +29,6 @@
         </table>
         <button class="btn btn-primary" @click="abrirFormulario">Añadir Proyecto</button>
       </div>
-
-      <div class="col-md-6">
-        <h2>Tareas</h2>
-        <table class="table table-bordered">
-          <thead>
-            <tr>
-              <th>Nombre de la Tarea</th>
-              <th>Estado</th>
-              <th>Fecha</th>
-              <th>Proyecto</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr v-for="(tarea, index) in tareas" :key="index">
-              <td>{{ tarea.nombre }}</td>
-              <td>{{ tarea.estado }}</td>
-              <td>{{ tarea.fecha }}</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
     </div>
 
     <div v-if="mostrarFormulario" class="modal">
@@ -80,7 +59,7 @@
 
 <script setup>
 import { ref, onMounted } from 'vue';
-import axios from 'axios'; // Importa axios
+import axios from 'axios'; 
 
 const proyectos = ref([]);
 const nuevoProyecto = ref({
@@ -89,46 +68,46 @@ const nuevoProyecto = ref({
   fecha: ''
 });
 
-// Función para cargar los proyectos del usuario autenticado
+
 const cargarProyectos = async () => {
   try {
-    const token = localStorage.getItem('token'); // Obtenemos el token desde localStorage
+    const token = localStorage.getItem('token'); 
     const response = await axios.get('http://localhost:3000/api/proyectos', {
       headers: {
-        Authorization: token
+        'Authorization': `Bearer ${token}` 
       }
     });
-    proyectos.value = response.data; // Actualizamos la lista de proyectos
+    proyectos.value = response.data; 
   } catch (error) {
     console.error('Error al cargar proyectos:', error);
   }
 };
 
-// Llamamos a la función al montar el componente
+
 onMounted(() => {
   cargarProyectos();
 });
 
-// Función para guardar un proyecto nuevo
+
 const guardarProyecto = async () => {
   try {
-    const token = localStorage.getItem('token'); // Obtenemos el token desde localStorage
+    const token = localStorage.getItem('token'); 
     const response = await axios.post('http://localhost:3000/api/proyectos', 
       { ...nuevoProyecto.value }, 
       {
         headers: {
-          Authorization: token
+          'Authorization': `Bearer ${token}`
         }
       }
     );
-    proyectos.value.push(response.data); // Actualizamos la lista de proyectos
-    cerrarFormulario(); // Cerramos el formulario
+    proyectos.value.push(response.data);
+    cerrarFormulario(); 
   } catch (error) {
     console.error('Error al guardar proyecto:', error);
   }
 };
 
-// Otras funciones de gestión del formulario
+
 const mostrarFormulario = ref(false);
 const abrirFormulario = () => { mostrarFormulario.value = true; };
 const cerrarFormulario = () => { mostrarFormulario.value = false;};
