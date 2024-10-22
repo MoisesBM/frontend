@@ -1,6 +1,6 @@
 <template>
   <div class="d-flex vh-100">
-    <!-- Sidebar -->
+    <!-- #SIDEBAR -->
     <nav
       id="sidebar"
       class="bg-primary d-flex flex-column justify-content-between"
@@ -8,14 +8,14 @@
       @mouseleave="hideNames"
     >
       <div>
-        <!-- Logo -->
+        <!-- #ICONO DE LOGO -->
         <div class="d-flex align-items-center justify-content-center py-4">
           <i class="bi bi-app-indicator text-white fs-2"></i>
         </div>
 
-        <!-- Menú -->
+        <!-- #MENU -->
         <ul class="nav flex-column mt-4">
-          <li class="nav-item" v-for="item in menuItems" :key="item.name">
+          <li class="nav-item" v-for="item in menuItems" :key="item.name" @click="navigateTo(item.route)">
             <a
               class="nav-link d-flex align-items-center justify-content-start text-white"
               href="#"
@@ -31,7 +31,7 @@
         </ul>
       </div>
 
-      <!-- Botón de Salir -->
+      <!-- #LOGOUT BUTTOM -->
       <div class="text-center mb-4">
         <button class="btn btn-danger w-100 d-flex align-items-center justify-content-center" @click="logout">
           <i class="bi bi-box-arrow-right"></i>
@@ -42,10 +42,12 @@
       </div>
     </nav>
 
-    <!-- Barra -->
+    <!-- #BARRA SUPERIOR -->
     <div class="w-100 d-flex flex-column">
       <div class="topbar d-flex align-items-center justify-content-between p-3">
-        <div>
+        <div class="d-flex align-items-center">
+          <!-- #LOGO EN LA BARRA SUPERIOR -->
+          <img :src="logo" alt="Logo" class="logo me-2" />
           <h2 class="text-success">GstWeb</h2>
         </div>
         <div class="d-flex align-items-center">
@@ -53,7 +55,7 @@
             <input type="text" class="form-control" placeholder="Buscar" />
           </div>
           <div class="user-profile d-flex align-items-center">
-            <!-- Reemplazar la imagen con un icono de persona -->
+            <!-- #ICONO DE USUARIO -->
             <i class="bi bi-person-circle" style="font-size: 1.5rem;"></i>
             <span class="ms-2">{{ username }}</span>
 
@@ -63,12 +65,11 @@
             <button class="btn btn-danger ms-3" @click="logout">
               <i class="bi bi-box-arrow-left"></i> <!-- Icono diferente -->
             </button>
-            
           </div>
         </div>
       </div>
 
-      <!-- Contenido principal -->
+      <!-- #CONTENIDO PRINCIPAL -->
       <div id="content" class="flex-grow-1">
         <slot />
       </div>
@@ -79,6 +80,7 @@
 <script setup>
 import { ref, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
+import logo from '@/assets/logo.png'; 
 
 const isSidebarExpanded = ref(false);
 const router = useRouter();
@@ -89,12 +91,12 @@ onMounted(() => {
   username.value = localStorage.getItem('username');
 });
 
-//#BARRA LATERAL
+// #ITEMS BARRA LATERAL
 const menuItems = ref([
-  { name: 'Inicio', icon: 'bi bi-grid' },
-  { name: 'Proyectos', icon: 'bi bi-app' },
-  { name: 'Tareas', icon: 'bi bi-map' },
-  { name: 'Perfil', icon: 'bi bi-person' },
+  { name: 'Inicio', icon: 'bi bi-grid', route: '/welcome' },
+  { name: 'Proyectos', icon: 'bi bi-app', route: '/home' },
+  { name: 'Tareas', icon: 'bi bi-map', route: '/tareas' },
+  { name: 'Perfil', icon: 'bi bi-person', route: '/perfil' },
 ]);
 
 const showNames = () => {
@@ -105,7 +107,12 @@ const hideNames = () => {
   isSidebarExpanded.value = false;
 };
 
-//#CIERRE DE SESION
+// #RUTAS MENU LATERAL
+const navigateTo = (route) => {
+  router.push(route);
+};
+
+// #CIERRE DE SESION (SOLO ES NECESARIO BORRAR EL USERNAME, LO DEMAS ES INCESARIO)
 const logout = () => {
   localStorage.removeItem('username');
   localStorage.removeItem('token');
@@ -116,15 +123,15 @@ const logout = () => {
 </script>
 
 <style scoped>
-/* Sidebar */
+/* #SIDEBAR */
 #sidebar {
   width: 60px;
-  min-height: 100vh; /* Asegura que el sidebar ocupe toda la altura */
+  height: 100vh; 
   transition: width 0.4s ease;
-  background-color: #007bff; /* Azul sólido para todo el sidebar */
+  background-color: #007bff;
   display: flex;
   flex-direction: column;
-  justify-content: space-between; /* Distribuye el contenido superior e inferior */
+  justify-content: space-between; 
 }
 
 #sidebar:hover {
@@ -136,15 +143,27 @@ const logout = () => {
   min-width: 24px;
   text-align: center;
 }
-
+/*#BOTON DE LOGOUT AL FINAL*/
 .logout-btn-container {
-  margin-top: auto; /* Se asegura de que el botón de logout esté al final */
+  margin-top: auto; 
 }
 
 .nav-link {
   padding: 10px 20px;
   display: flex;
   align-items: center;
+  transition: background-color 0.3s ease;
+  border-radius: 5px;
+  background-color: #0056b3; 
+  margin: 0;
+}
+
+.nav-item {
+  margin-bottom: 5px; 
+}
+
+.nav-link:hover {
+  background-color: #004494;
 }
 
 .transition-text {
@@ -158,7 +177,7 @@ const logout = () => {
   visibility: hidden;
 }
 
-/* Topbar */
+/* TOPBAR */
 .topbar {
   background-color: #f8f9fa;
   border-bottom: 1px solid #ddd;
@@ -180,12 +199,12 @@ const logout = () => {
   padding: 20px;
 }
 
-/* Flexibilidad del diseño para que el sidebar y el contenido se adapten a la pantalla */
+/* #FLEXIBILIDAD SIDEBAR ADAPTABLE */
 .d-flex.vh-100 {
   height: 100vh;
 }
 
-/* Media queries para pantallas más pequeñas */
+/* #RESPONSIVE */
 @media (max-width: 768px) {
   #sidebar {
     width: 50px;
@@ -207,5 +226,9 @@ const logout = () => {
   .user-profile {
     margin-top: 10px;
   }
+}
+.logo {
+  width: 60px; 
+  height: auto;
 }
 </style>

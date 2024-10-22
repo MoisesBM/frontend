@@ -157,7 +157,7 @@ const guardarCambiosProyecto = async () => {
   }
 };
 
-// Función para confirmar la eliminación de un proyecto
+
 const confirmarEliminacion = (id) => {
   const confirmacion = confirm('¿Estás seguro de que deseas eliminar este proyecto?');
   if (confirmacion) {
@@ -165,7 +165,7 @@ const confirmarEliminacion = (id) => {
   }
 };
 
-// Función para eliminar un proyecto
+
 const eliminarProyecto = async (id) => {
   try {
     const username = localStorage.getItem('username');

@@ -3,7 +3,8 @@ import { createRouter, createWebHistory } from 'vue-router';
 import LoginView from '@/views/LoginView.vue';
 import RegisterView from '@/views/RegisterView.vue';
 import HomeView from '@/views/HomeView.vue';
-import GestionarProyecto from '@/components/GestionarProyecto.vue';
+import GestionarView from '@/views/GestionarView.vue';
+import WelcomeView from '@/views/WelcomeView.vue';
 
 
 
@@ -22,6 +23,7 @@ const routes = [
       name: 'Register',
       component: RegisterView
     },
+    //#CREACION, ELIMINACION, AÑADIR, EDITAR PROYECTOS
     {
       path: '/home',
       name: 'HomeInicial',
@@ -31,7 +33,12 @@ const routes = [
     {
       path: '/proyectos/:id',
       name: 'GestionarProyecto',
-      component: GestionarProyecto
+      component: GestionarView
+    },
+    {
+      path: '/welcome',
+      name: 'welcome',
+      component: WelcomeView
     }
   ];
   

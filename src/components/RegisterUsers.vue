@@ -1,5 +1,7 @@
 <template>
   <div class="register">
+            <!-- Imagen del logo -->
+            <img :src="logo" alt="Logo" class="logo" />
     <h2>Registro</h2>
     <form @submit.prevent="register">
       <input v-model="username" type="text" placeholder="Nombre de usuario" required />
@@ -31,6 +33,7 @@
 
 <script setup>
 import useRegister from '@/composables/useRegister.js';
+import logo from '@/assets/logo.png'; // Asegúrate de que la ruta sea correcta
 import { ref } from 'vue';
 
 const { username, password, confirmPassword, email, showModal, register, goToLogin} = useRegister();
@@ -41,6 +44,10 @@ console.log('Valor de acceptTerms:', acceptTerms.value);
 </script>
 
 <style scoped>
+.logo {
+  width: 100px; /* Ajusta el tamaño según sea necesario */
+  margin-bottom: 20px;
+}
 .register {
   display: flex;
   flex-direction: column;

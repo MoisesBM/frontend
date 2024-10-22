@@ -1,5 +1,8 @@
 <template>
   <div class="login-container">
+    <!-- Imagen del logo -->
+    <img :src="logo" alt="Logo" class="logo" />
+    
     <h2>Iniciar Sesión</h2>
     <form @submit.prevent="login">
       <div>
@@ -15,21 +18,18 @@
 
     <p v-if="errorMessage" class="error">{{ errorMessage }}</p>
 
-
     <p class="register-link">No tienes una cuenta? <router-link to="/register">Regístrate aquí</router-link></p>
   </div>
 </template>
 
 <script setup>
-
 import useAuth from '@/composables/useAuth.js';
+import logo from '@/assets/logo.png'; // Asegúrate de que la ruta sea correcta
 
 const { username, password, errorMessage, login } = useAuth();
 
 username.value = '';
 password.value = '';
-
-
 </script>
 
 <style scoped>
@@ -44,6 +44,11 @@ password.value = '';
   background-color: #f4f4f4;
   border-radius: 10px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.logo {
+  width: 100px; /* Ajusta el tamaño según sea necesario */
+  margin-bottom: 20px;
 }
 
 h2 {
@@ -124,14 +129,12 @@ button[type="submit"]:active {
   background-color: #1d3557;
 }
 
-
 .error {
   color: red;
   font-weight: bold;
   margin-top: 10px;
   text-align: center;
 }
-
 
 .register-link {
   margin-top: 20px;
