@@ -3,6 +3,7 @@ import { createRouter, createWebHistory } from 'vue-router';
 import LoginView from '@/views/LoginView.vue';
 import RegisterView from '@/views/RegisterView.vue';
 import HomeView from '@/views/HomeView.vue';
+import GestionarProyecto from '@/components/GestionarProyecto.vue';
 
 
 
@@ -26,6 +27,11 @@ const routes = [
       name: 'HomeInicial',
       component: HomeView,
       //meta: { requiresAuth: true }
+    },
+    {
+      path: '/proyectos/:id',
+      name: 'GestionarProyecto',
+      component: GestionarProyecto
     }
   ];
   

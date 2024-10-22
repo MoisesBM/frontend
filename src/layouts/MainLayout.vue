@@ -1,9 +1,9 @@
 <template>
-  <div class="d-flex">
+  <div class="d-flex vh-100">
     <!-- Sidebar -->
     <nav
       id="sidebar"
-      class="bg-primary vh-100 d-flex flex-column justify-content-between"
+      class="bg-primary d-flex flex-column justify-content-between"
       @mouseover="showNames"
       @mouseleave="hideNames"
     >
@@ -43,28 +43,33 @@
     </nav>
 
     <!-- Barra -->
-    <div class="w-100">
+    <div class="w-100 d-flex flex-column">
       <div class="topbar d-flex align-items-center justify-content-between p-3">
         <div>
           <h2 class="text-success">GstWeb</h2>
         </div>
         <div class="d-flex align-items-center">
           <div class="search-bar me-3">
-            <input type="text" class="form-control" placeholder="Search" />
+            <input type="text" class="form-control" placeholder="Buscar" />
           </div>
           <div class="user-profile d-flex align-items-center">
-            <img
-              src="https://via.placeholder.com/40"
-              alt="User profile"
-              class="rounded-circle"
-            />
-            <span class="ms-2">Moises Buitrago</span>
+            <!-- Reemplazar la imagen con un icono de persona -->
+            <i class="bi bi-person-circle" style="font-size: 1.5rem;"></i>
+            <span class="ms-2">{{ username }}</span>
+
+            <button class="btn btn-link ms-3" @click="openSettings">
+              <i class="bi bi-gear-fill"></i>
+            </button>
+            <button class="btn btn-danger ms-3" @click="logout">
+              <i class="bi bi-box-arrow-left"></i> <!-- Icono diferente -->
+            </button>
+            
           </div>
         </div>
       </div>
 
       <!-- Contenido principal -->
-      <div id="content">
+      <div id="content" class="flex-grow-1">
         <slot />
       </div>
     </div>
@@ -72,20 +77,24 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 
 const isSidebarExpanded = ref(false);
 const router = useRouter();
 
+const username = ref('');
+
+onMounted(() => {
+  username.value = localStorage.getItem('username');
+});
+
+//#BARRA LATERAL
 const menuItems = ref([
   { name: 'Inicio', icon: 'bi bi-grid' },
   { name: 'Proyectos', icon: 'bi bi-app' },
   { name: 'Tareas', icon: 'bi bi-map' },
   { name: 'Perfil', icon: 'bi bi-person' },
-  { name: ' ...', icon: 'bi bi-table' },
-  { name: '...', icon: 'bi bi-box-arrow-in-right' },
-  { name: '...', icon: 'bi bi-person-plus' },
 ]);
 
 const showNames = () => {
@@ -96,7 +105,11 @@ const hideNames = () => {
   isSidebarExpanded.value = false;
 };
 
+//#CIERRE DE SESION
 const logout = () => {
+  localStorage.removeItem('username');
+  localStorage.removeItem('token');
+  localStorage.removeItem('userId');
   console.log('Sesión cerrada');
   router.push('/login');
 };
@@ -106,7 +119,12 @@ const logout = () => {
 /* Sidebar */
 #sidebar {
   width: 60px;
+  min-height: 100vh; /* Asegura que el sidebar ocupe toda la altura */
   transition: width 0.4s ease;
+  background-color: #007bff; /* Azul sólido para todo el sidebar */
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between; /* Distribuye el contenido superior e inferior */
 }
 
 #sidebar:hover {
@@ -117,6 +135,10 @@ const logout = () => {
   font-size: 24px;
   min-width: 24px;
   text-align: center;
+}
+
+.logout-btn-container {
+  margin-top: auto; /* Se asegura de que el botón de logout esté al final */
 }
 
 .nav-link {
@@ -155,12 +177,35 @@ const logout = () => {
 
 #content {
   background-color: #f8f9fa;
+  padding: 20px;
 }
 
-.button-container {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-top: 10px;
+/* Flexibilidad del diseño para que el sidebar y el contenido se adapten a la pantalla */
+.d-flex.vh-100 {
+  height: 100vh;
+}
+
+/* Media queries para pantallas más pequeñas */
+@media (max-width: 768px) {
+  #sidebar {
+    width: 50px;
+  }
+
+  #sidebar:hover {
+    width: 150px;
+  }
+
+  .icon {
+    font-size: 20px;
+  }
+
+  .topbar {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .user-profile {
+    margin-top: 10px;
+  }
 }
 </style>

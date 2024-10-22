@@ -15,12 +15,6 @@
 
     <p v-if="errorMessage" class="error">{{ errorMessage }}</p>
 
-    <div v-if="tokenSent" class="token-container">
-      <h3>Token enviado a tu correo</h3>
-      <p>Ingresa el token para validar tu sesión</p>
-      <input v-model="token" type="text" placeholder="Token" />
-      <button @click="verifyToken">Validar Token</button>
-    </div>
 
     <p class="register-link">No tienes una cuenta? <router-link to="/register">Regístrate aquí</router-link></p>
   </div>
@@ -30,7 +24,12 @@
 
 import useAuth from '@/composables/useAuth.js';
 
-const { username, password, token,/**userId**/ errorMessage, tokenSent, login, verifyToken } = useAuth();
+const { username, password, errorMessage, login } = useAuth();
+
+username.value = '';
+password.value = '';
+
+
 </script>
 
 <style scoped>
