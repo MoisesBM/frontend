@@ -26,6 +26,7 @@
                 <button class="btn btn-primary me-2" @click="abrirFormularioEdicion(proyecto)" title="Editar Proyecto">
                   <i class="fas fa-edit"></i>
                 </button>
+                
                 <button class="btn btn-secondary me-2" @click="gestionarProyecto(proyecto.id)" title="Gestionar Proyecto">
                   <i class="fas fa-tasks"></i>
                 </button>
@@ -78,6 +79,17 @@ const nuevoProyecto = ref({
   fecha: ''
 }); 
 const editandoProyecto = ref(false);
+
+
+
+//const fecha = (fecha) => {
+  // date = new Date(fecha);
+  // year = date.getFullYear();
+  // month = String(date.getMonth() + 1).padStart(2, '0');
+//const day = String(date.getDate()).padStart(2, '0');
+  // `${year}-${month}-${day}`;
+//};
+
 const proyectoEditadoId = ref(null);
 
 const mostrarFormulario = ref(false);

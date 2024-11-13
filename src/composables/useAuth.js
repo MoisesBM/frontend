@@ -15,7 +15,7 @@ export default function useAuth() {
       errorMessage.value = 'Por favor, completa todos los campos.';
       return;
     }
-
+    
     errorMessage.value = ''; 
     loading.value = true; 
 
@@ -35,7 +35,7 @@ export default function useAuth() {
         username.value = '';
         password.value = '';
 
-        router.push('/home');
+        router.push('/welcome');
       } else {
         const { message } = await response.json();
         errorMessage.value = message || 'Credenciales incorrectas';

@@ -59,7 +59,7 @@
             <i class="bi bi-person-circle" style="font-size: 1.5rem;"></i>
             <span class="ms-2">{{ username }}</span>
 
-            <button class="btn btn-link ms-3" @click="openSettings">
+            <button class="btn btn-link ms-3" @click="openSettings" title="Perfil y Configuracion">
               <i class="bi bi-gear-fill"></i>
             </button>
             <button class="btn btn-danger ms-3" @click="logout">
@@ -96,7 +96,7 @@ const menuItems = ref([
   { name: 'Inicio', icon: 'bi bi-grid', route: '/welcome' },
   { name: 'Proyectos', icon: 'bi bi-app', route: '/home' },
   { name: 'Tareas', icon: 'bi bi-map', route: '/tareas' },
-  { name: 'Perfil', icon: 'bi bi-person', route: '/perfil' },
+  { name: 'Perfil', icon: 'bi bi-person', route: '/profile' },
 ]);
 
 const showNames = () => {
@@ -110,6 +110,10 @@ const hideNames = () => {
 // #RUTAS MENU LATERAL
 const navigateTo = (route) => {
   router.push(route);
+};
+
+const openSettings = () => {
+  router.push('/profile');
 };
 
 // #CIERRE DE SESION (SOLO ES NECESARIO BORRAR EL USERNAME, LO DEMAS ES INCESARIO)

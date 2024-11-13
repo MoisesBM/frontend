@@ -45,7 +45,7 @@ console.log('Valor de acceptTerms:', acceptTerms.value);
 
 <style scoped>
 .logo {
-  width: 100px; /* Ajusta el tamaño según sea necesario */
+  width: 100px;
   margin-bottom: 20px;
 }
 .register {

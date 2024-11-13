@@ -3,8 +3,9 @@ import { createRouter, createWebHistory } from 'vue-router';
 import LoginView from '@/views/LoginView.vue';
 import RegisterView from '@/views/RegisterView.vue';
 import HomeView from '@/views/HomeView.vue';
-import GestionarView from '@/views/GestionarView.vue';
 import WelcomeView from '@/views/WelcomeView.vue';
+import GestionarProyecto from '@/views/GestionarProyecto.vue';
+import PerfilView from '@/views/PerfilView.vue';
 
 
 
@@ -31,14 +32,19 @@ const routes = [
       //meta: { requiresAuth: true }
     },
     {
-      path: '/proyectos/:id',
-      name: 'GestionarProyecto',
-      component: GestionarView
-    },
-    {
       path: '/welcome',
       name: 'welcome',
       component: WelcomeView
+    },
+    {
+      path: '/proyectos/:id',
+      name: 'GestionarProyecto',
+      component: GestionarProyecto
+    },
+    {
+      path: '/profile',
+      name: 'Perfil',
+      component: PerfilView
     }
   ];
   
