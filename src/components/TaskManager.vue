@@ -15,6 +15,7 @@
             <th>Nombre de la Tarea</th>
             <th>Descripción</th>
             <th>Estado</th>
+            <th>Asignado a</th>
             <th>Acciones</th>
           </tr>
         </thead>
@@ -26,12 +27,16 @@
               <span :class="estadoClase(tarea.status)" class="estado-icono"></span>
               {{ tarea.status }}
             </td>
+            <td>{{ tarea.assigned_user ? tarea.assigned_user.username : 'No asignado' }}</td>
             <td>
               <button @click="editarTarea(tarea)" class="btn btn-warning btn-sm">
                 <i class="fas fa-edit"></i>
               </button>
-              <button @click="eliminarTarea(tarea.id)" class="btn btn-danger btn-sm">
+              <button @click="confirmarEliminarTarea(tarea.id)" class="btn btn-danger btn-sm">
                 <i class="fas fa-trash-alt"></i>
+              </button>
+              <button @click="abrirModalAsignarTarea(tarea)" class="btn btn-info btn-sm">
+                <i class="fas fa-user-plus"></i>
               </button>
             </td>
           </tr>
@@ -115,6 +120,28 @@
         </form>
       </div>
     </div>
+
+    <!-- Modal para Asignar Tarea a Usuario -->
+    <div v-if="mostrarModalAsignarTarea" class="modal">
+      <div class="modal-content">
+        <span class="close" @click="cerrarModalAsignarTarea">&times;</span>
+        <h3>Asignar Tarea a Usuario</h3>
+        <form @submit.prevent="asignarTareaAUsuario">
+          <div class="form-group">
+            <label for="usuarioAsignado">Seleccionar Usuario</label>
+            <select v-model="usuarioAsignado" class="form-control" required>
+              <option v-for="usuario in usuarios" :key="usuario.id" :value="usuario.id">
+                {{ usuario.username }}
+              </option>
+            </select>
+          </div>
+          <div class="form-actions">
+            <button type="submit" class="btn btn-primary mt-2">Asignar Tarea</button>
+            <button type="button" class="btn btn-secondary" @click="cerrarModalAsignarTarea">Cancelar</button>
+          </div>
+        </form>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -138,6 +165,9 @@ const mensajeError = ref('');
 const projectId = ref(route.params.id);
 const mostrarModalTarea = ref(false);
 const mostrarModalUsuario = ref(false);
+const mostrarModalAsignarTarea = ref(false);
+const tareaSeleccionada = ref(null);
+const usuarioAsignado = ref(null);
 
 const obtenerProyecto = async () => {
   try {
@@ -275,6 +305,11 @@ const guardarCambiosTarea = async () => {
   }
 };
 
+const confirmarEliminarTarea = (taskId) => {
+  if (confirm('¿Estás seguro de que deseas eliminar esta tarea?')) {
+    eliminarTarea(taskId);
+  }
+};
 const eliminarTarea = async (taskId) => {
   try {
     const response = await fetch(`http://localhost:3000/api/tasks/${taskId}`, {
@@ -317,6 +352,43 @@ const cerrarModalUsuario = () => {
   mostrarModalUsuario.value = false;
 };
 
+const abrirModalAsignarTarea = (tarea) => {
+  tareaSeleccionada.value = tarea;
+  usuarioAsignado.value = null;
+  mostrarModalAsignarTarea.value = true;
+};
+const cerrarModalAsignarTarea = () => {
+  mostrarModalAsignarTarea.value = false;
+};
+
+const asignarTareaAUsuario = async () => {
+  try {
+    // Verifica si los valores son correctos
+    console.log('taskId:', tareaSeleccionada.value.id);
+    console.log('userId:', usuarioAsignado.value);
+
+    const response = await fetch('http://localhost:3000/api/tasks/assign', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        taskId: tareaSeleccionada.value.id,
+        userId: usuarioAsignado.value
+      })
+    });
+    if (response.ok) {
+      await obtenerTareas();
+      mostrarModalAsignarTarea.value = false;
+      console.log('Tarea asignada al usuario');
+    } else {
+      console.error('Error al asignar la tarea al usuario');
+    }
+  } catch (error) {
+    console.error('Error en la conexión:',error);
+}
+};
+
 const estadoClase = (estado) => {
   switch (estado) {
     case 'Asignado':
@@ -338,12 +410,17 @@ onMounted(() => {
 </script>
 
 <style scoped>
-.container {
-  padding: 20px;
+
+h1,h2,h3,h4 {
+  color: #FFFFFF; /* Cambia todos los títulos (h1, h2, h3, h4) a blanco */
 }
 
-h1, h2, h3 {
-  color: #333;
+p {
+  color: #FFFFFF; /* Cambia el color de todos los párrafos a blanco */
+}
+
+.container {
+  padding: 20px;
 }
 
 .table {
@@ -404,6 +481,11 @@ h1, h2, h3 {
   width: 80%;
   max-width: 500px;
   border-radius: 10px;
+}
+
+.modal-content h1,.modal-content h2,.modal-content h3,.modal-content h4,.modal-content p,.modal-content label,.modal-content span {
+  color: #000000; /* Cambia el texto en el modal a negro */
+  text-shadow: none; /* Remueve el borde negro del texto en el modal */
 }
 
 .close {

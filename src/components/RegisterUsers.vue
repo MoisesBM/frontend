@@ -1,100 +1,127 @@
 <template>
-  <div class="register">
-            <!-- Imagen del logo -->
-            <img :src="logo" alt="Logo" class="logo" />
-    <h2>Registro</h2>
-    <form @submit.prevent="register">
-      <input v-model="username" type="text" placeholder="Nombre de usuario" required />
-      <input v-model="password" type="password" placeholder="Contraseña" required />
-      <input v-model="confirmPassword" type="password" placeholder="Confirmar contraseña" required />
-      <input v-model="email" type="email" placeholder="Correo electrónico" required />
-      
-      <div class="checkbox-container">
-        <input v-model="acceptTerms" type="checkbox" id="acceptTerms" />
-        <label for="acceptTerms">Acepto los términos y condiciones</label>
-        <small>Debe aceptar los términos y condiciones para registrarse.</small>
+  <div class="register-page">
+    <div class="register-container">
+      <!-- Imagen del logo -->
+      <img :src="logo" alt="Logo" class="logo" />
+      <font color="white"><h2>Registro de usuarios</h2></font>
+      <form @submit.prevent="register">
+        
+      <!-- #MENSAJE DE REGISTRO EXITOSO -->
+        <div v-if="successMessage" class="alert alert-success">
+        <p>{{ successMessage }}</p>
+        <button @click="goToLogin" class="register-button">Volver al login</button>
       </div>
 
-      <div class="button-container">
-        <button type="submit" :disabled="!acceptTerms">Registrar</button>
-        <button type="button" @click="goToLogin">Volver</button>
-      </div>
-    </form>
+        <div class="input-group">
+          <label>Nombre de usuario</label>
+          <input v-model="username" type="text" placeholder="Nombre de usuario" required />
+        </div>
+        <div class="input-group">
+          <label>Contraseña</label>
+          <input v-model="password" type="password" placeholder="Contraseña" required />
+        </div>
+        <div class="input-group">
+          <label>Confirmar contraseña</label>
+          <input v-model="confirmPassword" type="password" placeholder="Confirmar contraseña" required />
+        </div>
+        <div class="input-group">
+          <label>Correo electrónico</label>
+          <input v-model="email" type="email" placeholder="Correo electrónico" required />
+        </div>
+        <div class="checkbox-container">
+          <input v-model="acceptTerms" type="checkbox" id="acceptTerms" />
+          <label for="acceptTerms">Acepto los términos y condiciones</label>
+          <small>Debe aceptar los términos y condiciones para registrarse.</small>
+        </div>
 
-    <div v-if="showModal" class="modal">
-      <div class="modal-content">
-        <h3>Registro exitoso</h3>
-        <p>Tu cuenta ha sido registrada exitosamente.</p>
-        <button @click="goToLogin">Volver al login</button>
-      </div>
+        <div class="button-container">
+          <button type="submit" class="register-button" :disabled="!acceptTerms">Registrar</button>
+          <button type="button" @click="goToLogin" class="register-button">Volver</button>
+        </div>
+      </form>
+
     </div>
   </div>
 </template>
 
 <script setup>
 import useRegister from '@/composables/useRegister.js';
-import logo from '@/assets/logo.png'; // Asegúrate de que la ruta sea correcta
+import logo from '@/assets/logo.png'; 
 import { ref } from 'vue';
 
-const { username, password, confirmPassword, email, showModal, register, goToLogin} = useRegister();
+const { username, password, confirmPassword, email, successMessage, register, goToLogin} = useRegister();
 const acceptTerms = ref(false);
 
 console.log('Valor de acceptTerms:', acceptTerms.value);
 
 </script>
 
-<style scoped>
-.logo {
-  width: 100px;
-  margin-bottom: 20px;
-}
-.register {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  max-width: 400px;
-  margin: 100px auto;
-  padding: 30px;
-  background-color: #f4f4f4;
-  border-radius: 10px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+<style>
+body {
+  background-image: url("~@/assets/background.jpg") !important;
+  background-color: #f0f0f0 !important; /* Color de respaldo */
+  background-repeat: no-repeat !important;
+  background-position: center center !important;
+  background-attachment: fixed !important;
+  background-size: cover !important;
+  height: 100vh;
+  margin: 0;
+  font-family: 'Arial', sans-serif;
 }
 
+.register-page {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+}
+
+.register-container {
+  background: rgba(0, 0, 0, 0.7) !important;
+  padding: 20px;
+  border-radius: 10px;
+  width: 350px;
+  text-align: center;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+}
+
+.logo {
+  width: 80px;
+  margin-bottom: 20px;
+}
 h2 {
   font-size: 2rem;
-  color: #1d3557;
-  margin-bottom: 20px;
-  text-align: center;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  letter-spacing: 1px;
+  color: aqua; /* Cambia este valor para ajustar el color del texto */
 }
 
-form {
-  width: 100%;
+.input-group {
+  margin-bottom: 15px;
+  text-align: left;
+}
+
+.input-group label {
+  color: #ffffff;
+  font-size: 14px;
 }
 
 input {
   width: 100%;
   padding: 10px;
-  margin: 10px 0;
-  border: 1px solid #a8dadc;
+  border: none;
   border-radius: 5px;
-  font-size: 1rem;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  box-sizing: border-box;
-  transition: border-color 0.3s ease;
+  margin-top: 5px;
 }
 
 input:focus {
   outline: none;
-  border-color: #457b9d;
+  border: 2px solid #457b9d;
 }
 
 .checkbox-container {
+  color: #ffffff;
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
+  align-items: center;
   margin: 10px 0;
 }
 
@@ -104,7 +131,7 @@ input:focus {
 
 .checkbox-container small {
   margin-top: 5px;
-  color: #6c757d;
+  color: #aeaeae;
   font-size: 0.875rem;
 }
 
@@ -114,78 +141,73 @@ input:focus {
   margin-top: 20px; 
 }
 
-button[type="submit"],
-.button-container button {
-  width: 48%; 
-  padding: 12px;
-  background-color: #457b9d;
-  color: #fff;
+.register-button {
+  background-color: #007BFF;
+  color: #ffffff;
   border: none;
+  padding: 10px;
   border-radius: 5px;
-  font-size: 1rem;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   cursor: pointer;
+  width: 48%; 
   transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
-button[type="submit"]:hover,
-.button-container button:hover {
-  background-color: #1d3557; 
+.register-button:hover {
+  background-color: #0056b3;
   transform: scale(1.02); 
 }
 
-button[type="submit"]:active,
-.button-container button:active {
+.register-button:active {
   transform: scale(0.98);
 }
 
-button[type="submit"]:disabled {
+.register-button:disabled {
   background-color: #a8dadc;
   cursor: not-allowed;
 }
 
-.modal {
-  position: fixed;
-  top: 0;
-  left: 0;
+.alert {
+  background-color: #d4edda;
+  color: #155724;
+  padding: 10px;
+  border-radius: 5px;
+  margin-top: 20px;
+}
+
+.alert-success {
+  background-color: #d4edda;
+  color: #155724;
+}
+
+.alert button {
+  margin-top: 10px;
+  background-color: #007BFF;
+  color: #ffffff;
+  border: none;
+  padding: 10px;
+  border-radius: 5px;
+  cursor: pointer;
   width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.6);
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
-.modal-content {
-  background-color: white;
-  padding: 20px;
-  border-radius: 10px;
-  text-align: center;
-  width: 80%;
-  max-width: 400px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+.alert button:hover {
+  background-color: #0056b3;
+  transform: scale(1.02); 
 }
 
-.modal-content h3 {
-  font-size: 1.5rem;
-  margin-bottom: 15px;
-  color: #1d3557;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-}
-
-.modal-content p {
-  font-size: 1rem;
-  color: #457b9d;
+.alert button:active {
+  transform: scale(0.98);
 }
 
 @media (max-width: 600px) {
-  .register {
+  .register-container {
     padding: 20px;
     margin: 20px auto;
   }
 
   input,
-  button[type="submit"] {
+  .register-button {
     font-size: 0.9rem;
     padding: 8px;
   }

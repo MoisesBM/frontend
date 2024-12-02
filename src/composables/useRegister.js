@@ -9,8 +9,9 @@ export default function useRegister() {
   const confirmPassword = ref('');
   const email = ref('');
   const acceptTerms = ref(false);
-  const showModal = ref(false);
+  const successMessage = ref('');
   const errorMessage = ref('');
+  
   const router = useRouter();
 
   const register = async () => {
@@ -28,7 +29,7 @@ export default function useRegister() {
       });
 
       if (response.status === 201) {
-        showModal.value = true;
+        successMessage.value = 'Tu cuenta ha sido registrada exitosamente.';
       }
     } catch (error) {
       if (error.response && error.response.status === 400) {
@@ -56,7 +57,7 @@ export default function useRegister() {
     confirmPassword,
     email,
     acceptTerms,
-    showModal,
+    successMessage,
     errorMessage,
     register,
     goToLogin,

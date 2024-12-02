@@ -7,8 +7,10 @@
     <div class="row">
       <!-- Projects Section -->
       <div class="col-md-12">
-        <h2>Proyectos</h2>
+        <h2>Proyectos <button class="btn btn-success mt-3" @click="abrirFormulario">Añadir Proyecto</button></h2> 
+        
         <table class="table table-dark table-striped table-hover">
+          
           <thead>
             <tr>
               <th>Nombre del Proyecto</th>
@@ -37,7 +39,7 @@
             </tr>
           </tbody>
         </table>
-        <button class="btn btn-success mt-3" @click="abrirFormulario">Añadir Proyecto</button>
+        
       </div>
     </div>
 
@@ -58,6 +60,10 @@
             <label for="fecha">Fecha:</label>
             <input type="date" v-model="nuevoProyecto.fecha" required />
           </div>
+          <div class="form-group">
+            <label for="newdate">Nuevo campo:</label>
+            <input type="text" v-model="nuevoProyecto.newdate" required />
+          </div>
           <div class="form-actions">
             <button type="submit" class="btn-save">{{ editandoProyecto ? 'Guardar Cambios' : 'Guardar' }}</button>
             <button type="button" class="btn-cancel" @click="cerrarFormulario">Cancelar</button>
@@ -65,6 +71,31 @@
         </form>
       </div>
     </div>
+    <h2 class="mt-5">Proyectos Asignados</h2>
+    <table class="table table-dark table-striped table-hover">
+      <thead>
+        <tr>
+          <th>Nombre del Proyecto</th>
+          <th>Descripción</th>
+          <th>Fecha</th>
+          <th>Creador</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody class="table-light text-dark">
+        <tr v-for="(proyecto, index) in proyectosAsignados" :key="index">
+          <td>{{ proyecto.name }}</td>
+          <td>{{ proyecto.description }}</td>
+          <td>{{ proyecto.date }}</td>
+          <td>{{ proyecto.creator }}</td>
+          <td>
+            <button class="btn btn-secondary me-2" @click="gestionarProyecto(proyecto.id)" title="Gestionar Proyecto">
+              <i class="fas fa-tasks"></i>
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
   </div>
 </template>
 
@@ -73,25 +104,15 @@ import { ref, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 
 const proyectos = ref([]);
+const proyectosAsignados = ref([]);
 const nuevoProyecto = ref({
   nombre: '',
   descripcion: '',
-  fecha: ''
+  fecha: '',
+  newdate: ''
 }); 
 const editandoProyecto = ref(false);
-
-
-
-//const fecha = (fecha) => {
-  // date = new Date(fecha);
-  // year = date.getFullYear();
-  // month = String(date.getMonth() + 1).padStart(2, '0');
-//const day = String(date.getDate()).padStart(2, '0');
-  // `${year}-${month}-${day}`;
-//};
-
 const proyectoEditadoId = ref(null);
-
 const mostrarFormulario = ref(false);
 const router = useRouter();
 
@@ -124,6 +145,7 @@ const guardarProyecto = async () => {
         name: nuevoProyecto.value.nombre,
         description: nuevoProyecto.value.descripcion,
         date: nuevoProyecto.value.fecha,
+        newdate: nuevoProyecto.value.newdate,
       })
     });
 
@@ -131,7 +153,7 @@ const guardarProyecto = async () => {
       const data = await response.json();
       proyectos.value.push(data.project); 
       cerrarFormulario();
-      nuevoProyecto.value = { nombre: '', descripcion: '', fecha: '' };
+      nuevoProyecto.value = { nombre: '', descripcion: '', fecha: '', newdate: '' };
     } else {
       console.error('Error al guardar el proyecto');
     }
@@ -215,12 +237,32 @@ const obtenerProyectos = async () => {
   }
 };
 
+const obtenerProyectosAsignados = async () => {
+  try {
+    const username = localStorage.getItem('username');
+    const response = await fetch(`http://localhost:3000/api/assigned-projects?username=${username}`);
+    if (response.ok) {
+      proyectosAsignados.value = await response.json();
+      console.log('Proyectos Asignados:', proyectosAsignados.value);
+    } else {
+      console.error('Error al obtener los proyectos asignados');
+    }
+  } catch (error) {
+    console.error('Error en la conexión:', error);
+  }
+};
+
 onMounted(() => {
   obtenerProyectos();
+  obtenerProyectosAsignados();
 });
 </script>
 
 <style scoped>
+h1, h2 {
+  color: #FFFFFF;
+}
+
 .modal {
   background-color: rgba(0, 0, 0, 0.5);
   position: fixed;
@@ -238,18 +280,6 @@ form {
   padding: 20px;
   border-radius: 5px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-}
-
-.modal {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.6);
-  display: flex;
-  justify-content: center;
-  align-items: center;
 }
 
 .form-container {
@@ -295,9 +325,11 @@ input[type="date"]:focus {
   display: flex;
   justify-content: space-between;
 }
-
+.btn{
+  background-color: #007bff;
+}
 .btn-save {
-  background-color: #28a745;
+  background-color: #24d54d;
   color: white;
   padding: 10px 20px;
   border: none;
@@ -320,6 +352,6 @@ input[type="date"]:focus {
 }
 
 button:hover {
-  opacity: 0.9;
+  opacity:0.9;
 }
 </style>

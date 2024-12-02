@@ -1,30 +1,33 @@
 <template>
-  <div class="login-container">
-    <!-- Imagen del logo -->
-    <img :src="logo" alt="Logo" class="logo" />
-    
-    <h2>Iniciar Sesión</h2>
-    <form @submit.prevent="login">
-      <div>
-        <label>Usuario</label>
-        <input v-model="username" type="text" required placeholder="Nombre de usuario" />
-      </div>
-      <div>
-        <label>Contraseña</label>
-        <input v-model="password" type="password" required placeholder="Contraseña" />
-      </div>
-      <button type="submit">Entrar</button>
-    </form>
+  <div class="login-page">
+    <div class="login-container">
+      <!-- Imagen del logo -->
+      <img :src="logo" alt="Logo" class="logo" />
+      
+      <h2>INICIAR SESIÓN</h2>
+      <form @submit.prevent="login">
+        <div class="input-group">
+          <label>Usuario</label>
+          <input v-model="username" type="text" required placeholder="Nombre de usuario" />
+        </div>
+        <div class="input-group">
+          <label>Contraseña</label>
+          <input v-model="password" type="password" required placeholder="Contraseña" />
+        </div>
+        <button type="submit" class="login-button">Entrar</button>
+      </form>
 
-    <p v-if="errorMessage" class="error">{{ errorMessage }}</p>
+      <p v-if="errorMessage" class="error">{{ errorMessage }}</p>
 
-    <p class="register-link">No tienes una cuenta? <router-link to="/register">Regístrate aquí</router-link></p>
+      <p class="register-link">No tienes una cuenta? <router-link to="/register">Regístrate aquí</router-link></p>
+    </div>
   </div>
 </template>
 
+
 <script setup>
 import useAuth from '@/composables/useAuth.js';
-import logo from '@/assets/logo.png'; // Asegúrate de que la ruta sea correcta
+import logo from '@/assets/logo.png';
 
 const { username, password, errorMessage, login } = useAuth();
 
@@ -32,134 +35,81 @@ username.value = '';
 password.value = '';
 </script>
 
-<style scoped>
-.login-container {
+<style scoped>  
+.login-page {
+  background-image: url("~@/assets/background.jpg") !important;
+  background-color: #f0f0f0 !important; /* Color de respaldo */
+  background-repeat: no-repeat !important;
+  background-position: center center !important;
+  background-attachment: fixed !important;
+  background-size: cover !important;
   display: flex;
-  flex-direction: column;
-  align-items: center;
   justify-content: center;
-  max-width: 400px;
-  margin: 100px auto;
-  padding: 30px;
-  background-color: #f4f4f4;
+  align-items: center;
+  height: 100vh;
+}
+
+.login-container {
+  background: rgba(0, 0, 0, 0.7) !important;
+  padding: 20px;
   border-radius: 10px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  width: 300px;
+  text-align: center;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
 }
 
 .logo {
-  width: 100px; /* Ajusta el tamaño según sea necesario */
+  width: 80px;
   margin-bottom: 20px;
 }
 
 h2 {
-  font-size: 2rem;
-  color: #1d3557;
+  color: #ffffff;
+  font-family: 'Arial', sans-serif;
+  font-weight: bold;
   margin-bottom: 20px;
-  text-align: center;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  letter-spacing: 1px;
 }
 
-form {
-  width: 100%;
+.input-group {
+  margin-bottom: 15px;
+  text-align: left;
 }
 
-input {
+.input-group label {
+  color: #ffffff;
+  font-size: 14px;
+}
+
+.input-group input {
   width: 100%;
   padding: 10px;
-  margin: 10px 0;
-  border: 1px solid #a8dadc;
-  border-radius: 5px;
-  font-size: 1rem;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  box-sizing: border-box;
-  transition: border-color 0.3s ease;
-}
-
-input:focus {
-  outline: none;
-  border-color: #457b9d;
-}
-
-button[type="submit"] {
-  width: 100%;
-  padding: 12px;
-  background-color: #457b9d;
-  color: #fff;
   border: none;
   border-radius: 5px;
-  font-size: 1rem;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  margin-top: 5px;
+}
+
+.login-button {
+  background-color: #007BFF;
+  color: #ffffff;
+  border: none;
+  padding: 10px;
+  border-radius: 5px;
   cursor: pointer;
-  transition: background-color 0.3s ease, transform 0.2s ease;
+  width: 100%;
 }
 
-button[type="submit"]:hover {
-  background-color: #1d3557;
-  transform: scale(1.02);
+.login-button:hover {
+  background-color: #0056b3;
 }
 
-button[type="submit"]:active {
-  transform: scale(0.98);
-}
-
-.token-container {
+.register-link {
+  color: #ffffff;
+  font-size: 14px;
   margin-top: 20px;
-}
-
-.token-container input {
-  width: 100%;
-  padding: 10px;
-  margin: 10px 0;
-  border: 1px solid #a8dadc;
-  border-radius: 5px;
-}
-
-.token-container button {
-  width: 100%;
-  padding: 12px;
-  background-color: #457b9d;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-}
-
-.token-container button:hover {
-  background-color: #1d3557;
 }
 
 .error {
   color: red;
-  font-weight: bold;
   margin-top: 10px;
-  text-align: center;
-}
-
-.register-link {
-  margin-top: 20px;
-  text-align: center;
-  font-size: 1rem;
-  color: #457b9d;
-}
-
-.register-link a {
-  color: #1d3557;
-  text-decoration: underline;
-}
-.register-link a:hover {
-  color: #457b9d;
-}
-
-@media (max-width: 600px) {
-  .login-container {
-    padding: 20px;
-    margin: 20px auto;
-  }
-
-  input, button {
-    font-size: 0.9rem;
-    padding: 8px;
-  }
 }
 </style>

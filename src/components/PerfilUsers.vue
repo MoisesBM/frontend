@@ -7,7 +7,7 @@
         <div class="card-body">
           <h5 class="card-title">Datos del Usuario</h5>
           <p class="card-text"><strong>Nombre:</strong> {{ usuario.name }}</p>
-          <p class="card-text"><strong>Correo:</strong> {{ usuario.email }}</p>
+          <p class="card-text"><strong>Correo:</strong> </p>
           <button @click="configurarPerfil" class="btn btn-primary">
             <i class="fas fa-cog"></i> Cambiar Contraseña
           </button>
@@ -20,35 +20,32 @@
   </template>
   
   <script setup>
-  import { ref, onMounted } from 'vue';
-  
+  import { ref, onMounted} from 'vue';
+  import { useRouter } from 'vue-router'; 
+
+  const router = useRouter();
   const usuario = ref({
-    name: '',
-    email: ''
+    name: ''
   });
   
   const obtenerDatosUsuario = async () => {
-    try {
-      const response = await fetch('http://localhost:3000/api/user/profile');
-      if (response.ok) {
-        const data = await response.json();
-        usuario.value = data;
-      } else {
-        console.error('Error al obtener los datos del usuario');
-      }
-    } catch (error) {
-      console.error('Error en la conexión:', error);
-    }
-  };
+    const username = localStorage.getItem('username'); // Obtener el username de localStorage
+  if (!username) {
+    console.error('Username no encontrados en localStorage');
+    return;
+  }
+  usuario.value = { username };
+
+};
   
   const configurarPerfil = () => {
-    // Lógica para configurar el perfil
     console.log('Configuración del perfil');
   };
   
   const cerrarSesion = () => {
-    // Lógica para cerrar sesión
-    console.log('Cerrando sesión');
+    localStorage.removeItem('username');
+    console.log('Sesión cerrada');
+    router.push('/login');
   };
   
   onMounted(() => {

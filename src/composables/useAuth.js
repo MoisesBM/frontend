@@ -25,7 +25,7 @@ export default function useAuth() {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ username: username.value, password: password.value }),
+        body: JSON.stringify({ username: username.value, password: password.value}),
       });
 
       if (response.ok) {
